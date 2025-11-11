@@ -1,18 +1,5 @@
 # LearnSphere: Full-Stack E-Learning SaaS Platform
 
-## 📜 Table of Contents
-
-- [Project Overview](#-project-overview)
-- [Core Features](#-core-features)
-- [Architecture & Tech Stack](#-architecture--tech-stack)
-- [Local Development Setup](#-local-development-setup)
-- [Environment Variables](#-environment-variables)
-- [API Endpoints](#-api-endpoints)
-- [Future Roadmap](#-future-roadmap)
-- [Contact](#-contact)
-
----
-
 ## 📖 Project Overview
 
 LearnSphere is a full-stack web application designed to mimic a modern e-learning platform like Udemy or Coursera. It provides a robust and scalable foundation for delivering educational content online. The platform supports multiple user roles (Student, Instructor, Admin), each with a distinct set of permissions and capabilities, demonstrating a comprehensive understanding of authentication, authorization, and database security.
