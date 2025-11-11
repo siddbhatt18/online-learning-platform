@@ -2,7 +2,6 @@
 
 ## 📜 Table of Contents
 
-- [Live Demo](#-live-demo)
 - [Project Overview](#-project-overview)
 - [Core Features](#-core-features)
 - [Architecture & Tech Stack](#-architecture--tech-stack)
@@ -11,12 +10,6 @@
 - [API Endpoints](#-api-endpoints)
 - [Future Roadmap](#-future-roadmap)
 - [Contact](#-contact)
-
-## 🌐 Live Demo
-
-The project is deployed and fully functional. You can explore the live version here:
-
-**[learnsphere-demo.vercel.app](https://learnsphere-demo.vercel.app)**  
 
 ---
 
