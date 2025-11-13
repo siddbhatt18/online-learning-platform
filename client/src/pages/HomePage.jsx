@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+console.log("VITE_API_BASE_URL from environment:", import.meta.env.VITE_API_BASE_URL);
+
 // A simple array of features to display.
 const features = [
     {
