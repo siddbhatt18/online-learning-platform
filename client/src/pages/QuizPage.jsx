@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient'; // <-- 1. Import the new configured axios client
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
@@ -18,7 +18,8 @@ const QuizPage = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/quizzes/${courseId}`, {
+                // 2. Use the new client with a relative URL
+                const response = await axiosClient.get(`/api/quizzes/${courseId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setQuiz(response.data);
@@ -31,6 +32,10 @@ const QuizPage = () => {
         };
         if (token) {
             fetchQuiz();
+        } else {
+            // If there's no token, we can't fetch a protected resource, so stop loading.
+            setLoading(false);
+            setError('You must be logged in to take a quiz.');
         }
     }, [courseId, token]);
 
@@ -46,38 +51,29 @@ const QuizPage = () => {
         const toastId = toast.loading('Submitting your answers...');
 
         try {
-            // The API call itself
-            const response = await axios.post('http://localhost:5000/api/quizzes/submit', {
+            // 3. Use the new client for the POST request
+            const response = await axiosClient.post('/api/quizzes/submit', {
                 quizId: quiz.id,
                 answers: selectedAnswers,
             });
 
-            // The API call was successful if we get here.
-            // Now, handle the successful response.
             const scoreData = response.data;
-            
-            // Update the UI to show the result view
             setResult(scoreData); 
-            
-            // Dismiss the loading toast and show a success message
             toast.success(`Quiz submitted! You scored ${scoreData.score}/${scoreData.total}`, { 
-                id: toastId, // This replaces the loading toast
+                id: toastId,
             });
 
         } catch (err) {
-            // This block only runs if the axios.post() promise itself is rejected (e.g., 4xx or 5xx error)
-            console.error("Error during quiz submission:", err); // Log the actual error
-            
-            // Dismiss the loading toast and show an error message
+            console.error("Error during quiz submission:", err);
             toast.error('Failed to submit quiz. Please try again.', { 
-                id: toastId, // This replaces the loading toast
+                id: toastId,
             });
         }
     };
 
-    if (loading) return <p className="text-center">Loading Quiz...</p>;
+    if (loading) return <p className="text-center text-secondary">Loading Quiz...</p>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
-    if (!quiz) return <p className="text-center">Quiz not found.</p>;
+    if (!quiz) return <p className="text-center text-secondary">Quiz not found for this course.</p>;
 
     // Show result view if quiz is submitted
     if (result) {
