@@ -1,16 +1,64 @@
-# React + Vite
+# LearnSphere - Frontend Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This directory contains the frontend application for the LearnSphere platform, built with **React** and **Vite**.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The client is a modern Single-Page Application (SPA) that provides the user interface for students, instructors, and admins. It handles all user interactions, from browsing courses and taking quizzes to managing content on dashboards.
 
-## React Compiler
+## Core Technologies
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Framework:** [React.js](https://reactjs.org/)
+-   **Build Tool:** [Vite](https://vitejs.dev/)
+-   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+-   **Routing:** [React Router](https://reactrouter.com/)
+-   **API Communication:** [Axios](https://axios-http.com/)
+-   **State Management:** React Context API (`AuthContext`)
+-   **UI Enhancements:**
+    -   [React Hot Toast](https://react-hot-toast.com/) for notifications.
+    -   [Chart.js](https://www.chartjs.org/) for analytics visualization (in the Admin Dashboard).
+-   **Payment:** [Stripe.js](https://stripe.com/docs/js) for secure payment processing.
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+/client
+├───public/              # Static assets
+└───src/
+    ├───assets/          # Images, fonts, etc.
+    ├───components/      # Reusable UI components (Navbar, Footer, ProgressBar, etc.)
+    ├───context/         # Global state management (AuthContext)
+    └───pages/           # Page-level components (HomePage, CoursesPage, LoginPage, etc.)
+```
+
+## Available Pages & Features
+
+-   **`HomePage.jsx`**: A professional landing page to attract users.
+-   **`CoursesPage.jsx`**: Displays a filterable catalog of all available courses.
+-   **`CourseDetailsPage.jsx`**: Shows detailed information for a single course, including lessons and a link to the quiz.
+-   **`LoginPage.jsx` & `SignupPage.jsx`**: User authentication forms.
+-   **`QuizPage.jsx`**: An interactive interface for taking quizzes and viewing results.
+-   **`InstructorDashboardPage.jsx`**: A protected page for instructors to manage their courses.
+-   **`AdminDashboardPage.jsx`**: A protected page for admins to view platform analytics.
+
+## Local Development
+
+1.  **Navigate to the client directory:**
+    ```bash
+    cd client
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Create an environment file:**
+    Create a `.env` file in this directory and add your public keys:
+    ```env
+    VITE_STRIPE_PUBLISHABLE_KEY=pk_test_YOUR_STRIPE_KEY
+    VITE_API_BASE_URL=http://localhost:5000
+    ```
+4.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be available at `http://localhost:5173`.
