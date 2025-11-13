@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axiosClient from '../api/axiosClient';
 import { Link } from 'react-router-dom';
+import axiosClient from '../api/axiosClient'; // <-- 1. Import the new configured axios client
 import { useAuth } from '../context/AuthContext';
 import ProgressBar from '../components/ProgressBar';
 
 const CourseCard = ({ course }) => {
     const { user, progress } = useAuth();
+    // This is a simplification. A more robust solution would fetch the total lesson count per course.
     const TOTAL_LESSONS_IN_COURSE = 4;
     const completedLessonsCount = (user && progress[course.id]) ? progress[course.id].length : 0;
     const buttonText = completedLessonsCount === TOTAL_LESSONS_IN_COURSE ? 'Review Course' : 'Continue Learning';
@@ -28,33 +29,34 @@ const CourseCard = ({ course }) => {
 
 const CoursesPage = () => {
     const [courses, setCourses] = useState([]);
-    const [filteredCourses, setFilteredCourses] = useState([]); // State for filtered courses
-    const [searchTerm, setSearchTerm] = useState(''); // State for the search input
+    const [filteredCourses, setFilteredCourses] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Effect to fetch all courses initially
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/courses');
+                // --- 2. Use the new client with a relative URL ---
+                // The base URL (localhost or production) is now handled automatically.
+                const response = await axiosClient.get('/api/courses');
+                
                 setCourses(response.data);
-                setFilteredCourses(response.data); // Initially, filtered list is the full list
+                setFilteredCourses(response.data);
             } catch (err) {
                 setError('Failed to load courses.');
-                console.error(err);
+                console.error("Error fetching courses:", err);
             } finally {
                 setLoading(false);
             }
         };
         fetchCourses();
-    }, []);
+    }, []); // Empty dependency array ensures this runs only once on mount
 
-    // Effect to filter courses whenever search term changes
     useEffect(() => {
         const results = courses.filter(course =>
             course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.description.toLowerCase().includes(searchTerm.toLowerCase())
+            (course.description && course.description.toLowerCase().includes(searchTerm.toLowerCase()))
         );
         setFilteredCourses(results);
     }, [searchTerm, courses]);
@@ -64,10 +66,9 @@ const CoursesPage = () => {
 
     return (
         <div>
-            <div className="mb-8 flex justify-between items-center">
+            <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                 <h1 className="text-3xl font-bold text-dark-text">Explore Courses</h1>
-                {/* Search Bar */}
-                <div className="w-full max-w-sm">
+                <div className="w-full sm:w-auto sm:max-w-sm">
                     <input
                         type="search"
                         placeholder="Search for courses..."
