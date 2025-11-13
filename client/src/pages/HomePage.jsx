@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-console.log("VITE_API_BASE_URL from environment:", import.meta.env.VITE_API_BASE_URL);
-
 // A simple array of features to display.
 const features = [
     {
@@ -62,9 +60,7 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* 3. Featured Courses Section has been removed. */}
-
-            {/* 4. Final Call to Action Section */}
+            {/* 3. Final Call to Action Section */}
             <section className="bg-primary text-white rounded-xl p-12 text-center shadow-2xl">
                 <h2 className="text-4xl font-bold mb-4">
                     Ready to Start Your Journey?
