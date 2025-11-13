@@ -4,15 +4,14 @@ import App from './App.jsx';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
-import axios from 'axios';
 
-// This line makes your app production-ready. It tells Axios to use the
-// Vercel environment variable, or fall back to localhost if it's not found (for local dev).
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// No longer need to import or configure axios here.
+// All API configuration is now handled by 'src/api/axiosClient.js'.
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
+      {/* AuthProvider wraps the entire app, making auth state available everywhere */}
       <AuthProvider>
         <App />
       </AuthProvider>
