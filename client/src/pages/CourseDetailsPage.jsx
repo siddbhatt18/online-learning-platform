@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient'; // <-- 1. Import the new configured axios client
 import { useAuth } from '../context/AuthContext';
 import { useStripe } from '@stripe/react-stripe-js';
 
@@ -21,13 +21,13 @@ const CourseDetailsPage = () => {
         const fetchCourseData = async () => {
             setLoading(true);
             try {
-                // Always fetch public course details
-                const courseRes = await axios.get(`http://localhost:5000/api/courses/${courseId}`);
+                // 2. Use the new client with a relative URL
+                const courseRes = await axiosClient.get(`/api/courses/${courseId}`);
                 setCourse(courseRes.data);
 
-                // If user is logged in, also fetch the private lesson list
                 if (token) {
-                    const lessonsRes = await axios.get(`http://localhost:5000/api/courses/${courseId}/lessons`, {
+                    // Use the new client for the lessons request as well
+                    const lessonsRes = await axiosClient.get(`/api/courses/${courseId}/lessons`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     setLessons(lessonsRes.data);
@@ -51,7 +51,8 @@ const CourseDetailsPage = () => {
         if (!stripe) return;
 
         try {
-            const response = await axios.post('http://localhost:5000/api/payment/create-checkout-session', {
+            // 3. Use the new client for the payment request
+            const response = await axiosClient.post('/api/payment/create-checkout-session', {
                 courseId: course.id,
                 courseName: course.title,
                 coursePrice: 19.99,
@@ -67,10 +68,9 @@ const CourseDetailsPage = () => {
         }
     };
 
-    // --- DERIVED STATE ---
+    // --- DERIVED STATE & RENDER LOGIC (No changes below this line) ---
     const completedLessons = progress[courseId] || [];
 
-    // --- RENDER LOGIC ---
     if (loading) return <p className="text-center text-secondary">Loading course content...</p>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
     if (!course) return <p className="text-center text-secondary">Course not found.</p>;
@@ -109,7 +109,7 @@ const CourseDetailsPage = () => {
                 <div className="lg:w-1/3">
                     <div className="bg-white rounded-lg shadow-md p-6">
                         <h2 className="text-2xl font-bold text-dark-text mb-4">Course Content</h2>
-                        {token ? ( // <-- IMPORTANT: Check if user is logged in
+                        {token ? (
                             <>
                                 <ul className="space-y-2">
                                     {lessons.length > 0 ? lessons.map(lesson => {
