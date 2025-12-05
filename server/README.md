@@ -1,65 +1,108 @@
-# LearnSphere - Backend Server
 
-This directory contains the backend API server for the LearnSphere platform, built with **Node.js** and **Express.js**.
+# 🔌 API Tester - Backend
 
-## Overview
+The robust Node.js backend for the **API Tester** application. This server acts as a secure proxy to bypass CORS restrictions, manages database interactions with Supabase, and handles user authentication data.
 
-The server provides a RESTful API that handles all business logic, data persistence, and security for the platform. It communicates with a **Supabase (PostgreSQL)** database and integrates with third-party services like **Stripe**.
+## 🔑 Core Responsibilities
 
-## Core Technologies
+  * **🛡️ CORS Proxy:** Forwards API requests from the frontend to external servers, bypassing browser Cross-Origin Resource Sharing (CORS) restrictions.
+  * **💾 Database Management:** Handles all CRUD operations for Request History, Collections, and Environment Variables using Supabase.
+  * **🔒 Security:** Validates User IDs to ensure data isolation (users only see their own history/collections).
+  * **⚡ Performance:** Lightweight Express.js architecture optimized for low-latency forwarding.
 
--   **Framework:** [Node.js](https://nodejs.org/) with [Express.js](https://expressjs.com/)
--   **Database:** [Supabase](https://supabase.com/) (PostgreSQL)
--   **Authentication:** [Supabase Auth](https://supabase.com/docs/guides/auth) (JWT-based)
--   **Security:**
-    -   `jsonwebtoken` for verifying tokens.
-    -   `cors` for Cross-Origin Resource Sharing policies.
-    -   Custom middleware for role-based access control (RBAC).
--   **Payment:** [Stripe Node.js Library](https://github.com/stripe/stripe-node) for creating secure payment sessions.
+## 🛠️ Tech Stack
 
-## Project Structure
+  * **Runtime:** Node.js
+  * **Framework:** Express.js
+  * **Database:** Supabase (PostgreSQL)
+  * **HTTP Client:** Axios (for proxying requests)
+  * **Security:** Dotenv (Environment variable management), CORS
 
+## ⚙️ Prerequisites
+
+  * **Node.js** (v16 or higher)
+  * **Supabase Account:** A valid project with the required tables (`history`, `collections`, `environments`, etc.).
+
+## 🚀 Getting Started
+
+### 1\. Installation
+
+Navigate to the server folder and install dependencies:
+
+```bash
+cd server
+npm install
 ```
-/server
-├───config/          # Configuration files (e.g., Supabase clients)
-├───middleware/      # Custom Express middleware (e.g., authentication check)
-└───routes/          # API route handlers (auth, courses, quizzes, etc.)
+
+### 2\. Environment Configuration
+
+Create a `.env` file in the root of the `server` folder and add your credentials.
+**Do NOT commit this file to version control.**
+
+```env
+PORT=5000
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_KEY=your_supabase_anon_key
 ```
 
-## API Endpoints
+### 3\. Running the Server
 
-The API exposes several endpoints to manage users, courses, and platform interactions. All routes are prefixed with `/api`.
+**Development Mode (with Nodemon):**
+Auto-restarts on file changes.
 
--   **`/auth`**: Handles user registration, login, and profile fetching.
--   **`/courses`**: Manages course creation, retrieval, and lesson data.
--   **`/quizzes`**: Provides quiz questions and handles submission grading.
--   **`/progress`**: Tracks and updates user completion of lessons.
--   **`/payment`**: Creates secure Stripe Checkout sessions.
--   **`/admin`**: Provides protected endpoints for platform analytics.
+```bash
+npm run dev
+```
 
-*For a detailed API endpoint list, please refer to the main project README.*
+**Production Mode:**
 
-## Local Development
+```bash
+node server.js
+```
 
-1.  **Navigate to the server directory:**
-    ```bash
-    cd server
-    ```
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-3.  **Create an environment file:**
-    Create a `.env` file in this directory and add your secret keys:
-    ```env
-    SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
-    SUPABASE_ANON_KEY=YOUR_SUPABASE_PUBLIC_ANON_KEY
-    SUPABASE_SERVICE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
-    STRIPE_SECRET_KEY=sk_test_YOUR_STRIPE_KEY
-    CLIENT_URL=http://localhost:5173
-    ```
-4.  **Start the server:**
-    ```bash
-    npm run start
-    ```
-    The API server will run on `http://localhost:5000`.
+The server will start at `http://localhost:5000`.
+
+## 📡 API Endpoints
+
+### Proxy Service
+
+  * **`POST /proxy`**
+      * **Body:** `{ url, method, headers, body, userId }`
+      * **Action:** Forwards request to target URL and saves to History.
+
+### History
+
+  * **`GET /history?userId=UUID`** - Fetch user's request history.
+
+### Collections
+
+  * **`GET /collections?userId=UUID`** - Fetch user's collections.
+  * **`POST /collections`** - Create a new folder.
+  * **`POST /collections/:id/items`** - Save a request to a folder.
+
+### Environments
+
+  * **`GET /environments?userId=UUID`** - Fetch user's environments.
+  * **`POST /environments`** - Create or Update an environment variable set.
+  * **`DELETE /environments/:id`** - Delete an environment.
+
+## 🗄️ Database Schema (Supabase)
+
+This backend requires the following SQL tables in Supabase:
+
+  * **`history`**: Stores past requests.
+  * **`collections`**: Stores folder names.
+  * **`collection_items`**: Stores saved requests inside folders.
+  * **`environments`**: Stores user-defined variables (e.g., `{{baseUrl}}`).
+
+## 🤝 Contributing
+
+1.  Fork the repository
+2.  Create your feature branch (`git checkout -b feature/NewEndpoint`)
+3.  Commit your changes (`git commit -m 'Add NewEndpoint'`)
+4.  Push to the branch (`git push origin feature/NewEndpoint`)
+5.  Open a Pull Request
+
+-----
+
+*Built with ❤️ for Developers.*
